@@ -4,7 +4,7 @@ Google and Exchange).  The problem is that they get big... and cloud-based
 systems aren't much good at uploading large ICS files (e.g., Google has a
 ridiculously small threshold - something like 500 Kb).
 
-This utility works around this by letting you extract events by years, making
+The `ics_splitter.py` utility works around this by letting you extract events by years, making
 smaller ics files that can (hopefully) be uploaded serially.
 
 Basic usage for this tool is:
