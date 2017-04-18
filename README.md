@@ -1,3 +1,4 @@
+# Let's split those ICS files...
 ics files allow us to move calendar events between calendaring systems (e.g.,
 Google and Exchange).  The problem is that they get big... and cloud-based
 systems aren't much good at uploading large ICS files (e.g., Google has a
