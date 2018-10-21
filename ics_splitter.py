@@ -8,19 +8,24 @@ from an ICS file into another ICS file.
 import argparse
 import re
 import sys, os
+from datetime import datetime
+from datetime import timedelta
 
 parser = argparse.ArgumentParser()
 parser.add_argument('input_file',help='the input ICS file')
-parser.add_argument('year',help='the year of dates to extract')
+parser.add_argument('schedule_from',help='the date which from schedules are extract: %Y%m%d')
+parser.add_argument('schedule_to', help='the date which to schedules are extract: %Y%m%d')
 parser.add_argument('output_file',help='the output ICS file')
 
 args = parser.parse_args()
 
-print 'Extracting %s events from %s into %s' % (args.year,args.input_file,args.output_file)
+print 'Extracting %s ~ %s events from %s into %s' % (args.schedule_from, args.schedule_to ,args.input_file,args.output_file)
 
-created_pattern = re.compile('^DTSTART.+%s' % args.year)
+schedule_from = datetime.strptime(args.schedule_from, '%Y%m%d')
+schedule_to = datetime.strptime(args.schedule_to, '%Y%m%d')
+range_in_date = [schedule_from + timedelta(days=x) for x in range(0, (schedule_to-schedule_from).days)]
 
-in_fname = args.input_file
+in_fname =  args.input_file
 out_fname = args.output_file
 
 if os.path.exists(out_fname):
@@ -60,9 +65,12 @@ for line in infh:
 			event_in_2017 = False
 			in_event = True
 
-		if in_event:	
-			if created_pattern.match(line):
-				event_in_2017 = True
+		if in_event:
+			if 'DTSTART' in line:
+				event_string = re.split(r'DTSTART.*:', line)[1].split('T')[0]
+				event_date = datetime.strptime(event_string.strip(), '%Y%m%d')
+				if event_date in range_in_date:
+					event_in_2017 = True
 			event_content.append(line)
 
 		if line.startswith(END_EVENT):
